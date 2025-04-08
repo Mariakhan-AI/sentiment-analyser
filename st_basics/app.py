@@ -32,9 +32,4 @@ def index():
     return render_template("index.html")
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> bfe9b637fd7ead7ddfd89b26b47b232e34cc780b
-
 
