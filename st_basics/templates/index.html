@@ -64,26 +64,31 @@
         <h2>Sentiment Analysis with Gemini 1.5 Pro</h2>
         <input type="text" id="userInput" placeholder="Enter text..." required>
         <button onclick="analyzeSentiment()">Analyze</button>
-        <p id="result"></p>
+        <p id="result" aria-live="polite"></p>
     </div>
 
     <script>
         async function analyzeSentiment() {
             let inputField = document.getElementById("userInput");
             let text = inputField.value.trim();
-            if (!text) return;
-
+            let resultElement = document.getElementById("result");
+            if (!text) {
+                resultElement.innerText = "Please enter some text to analyze.";
+                resultElement.className = "";
+                return;
+            }
             let response = await fetch("/analyze", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ text: text })
             });
-
             let data = await response.json();
-            let resultElement = document.getElementById("result");
+            if (data.error) {
+                resultElement.innerText = data.error;
+                resultElement.className = "";
+                return;
+            }
             resultElement.innerText = "Sentiment: " + data.sentiment;
-            
-            // Apply color based on sentiment
             resultElement.className = ""; // Reset class
             if (data.sentiment.toLowerCase() === "positive") {
                 resultElement.classList.add("positive");
